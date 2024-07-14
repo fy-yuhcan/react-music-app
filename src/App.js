@@ -15,6 +15,8 @@ export default function App() {
   const [keyword,setKeyword] = useState("")
   const [searchedSongs,setSearchedSongs] = useState()
   const [page,setPage] =useState(1)
+  const [hasNext,setHasNext] = useState(false)
+  const [hasPrev,setHasPrev] = useState(false)
   const audioRef = useRef(null)
 
   useEffect(()=>{
@@ -66,6 +68,8 @@ export default function App() {
     setIsLoading(true)
     const offset = parseInt(page) ? (parseInt(page) - 1) * limit : 0;
     const result = await spotify.searchSongs(keyword,limit,offset);
+    setHasNext(result.next != null)
+    setHasPrev(result.previous != null)
     setSearchedSongs(result.items);
     setIsLoading(false)
   }
@@ -94,7 +98,7 @@ export default function App() {
           <h2 className="text-2xl font-semibold mb-5">{isSearchedResult ? "Searched Result" : "Popular Songs"}</h2>
           <SongList isLoading={isLoading} songs={isSearchedResult ? searchedSongs :popularSong} onSongSelected={handleSongSlect} />
         </section>
-        {isSearchedResult && <Pagination onPrev={moveToPrev} onNext={moveToNext} />}
+        {isSearchedResult && <Pagination onPrev={hasPrev? moveToPrev : null} onNext={hasNext? moveToNext : null} />}
       </main>
       {selectedSong != null && <Player song={selectedSong} isPlay={isPlay} onButtonClick={toggleSong} />}
       <audio ref={audioRef}></audio>
