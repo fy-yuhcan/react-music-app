@@ -14,6 +14,7 @@ export default function App() {
   const [selectedSong,setSelectedSong] =useState()
   const [keyword,setKeyword] = useState("")
   const [searchedSongs,setSearchedSongs] = useState()
+  const [page,setPage] =useState(1)
   const audioRef = useRef(null)
 
   useEffect(()=>{
@@ -69,6 +70,17 @@ export default function App() {
     setIsLoading(false)
   }
   
+  const moveToNext = async()=>{
+    const nextPage = page +1
+    await searchSongs(nextPage)
+    setPage(nextPage)
+  }
+
+  const moveToPrev = async()=>{
+    const nextPrev = page -1
+    await searchSongs(nextPrev)
+    setPage(nextPrev)
+  }
   const isSearchedResult = searchedSongs != null;
 
   return (
@@ -82,7 +94,7 @@ export default function App() {
           <h2 className="text-2xl font-semibold mb-5">{isSearchedResult ? "Searched Result" : "Popular Songs"}</h2>
           <SongList isLoading={isLoading} songs={isSearchedResult ? searchedSongs :popularSong} onSongSelected={handleSongSlect} />
         </section>
-        {isSearchedResult && <Pagination />}
+        {isSearchedResult && <Pagination onPrev={moveToPrev} onNext={moveToNext} />}
       </main>
       {selectedSong != null && <Player song={selectedSong} isPlay={isPlay} onButtonClick={toggleSong} />}
       <audio ref={audioRef}></audio>
