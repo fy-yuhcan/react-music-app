@@ -22,7 +22,11 @@ export function Player(props) {
           <FontAwesomeIcon
             onClick={props.onButtonClick}
             icon={props.isPlay ? faStopCircle : faPlayCircle}
-            className="text-white text-3xl mx-2 h-[40px] w-[40px] cursor-pointer"
+            className={`text-white text-3xl mx-2 h-[40px] w-[40px] 
+              ${ props.song.preview_url 
+                != null 
+                ? "cursor-pointer" 
+                : "opacity-50 pointer-events-none" }`}
           />
         </div>
       </div>
